@@ -1,5 +1,18 @@
+const interval_ms = 20000;
+
 const images = [];
 let counter = 0;
+
+window.addEventListener("devicelight", (event)=>console.log(event.value))
+
+window.addEventListener('DOMContentLoaded', (event) => {
+	console.log('DOM fully loaded and parsed');
+	setInterval(updateTime, 1000);
+
+    const fileselector = document.getElementById("fileselector");
+    fileselector.addEventListener("change", fileSelected);   
+
+});
 
 function fileSelected(event){
     console.log(event.target.files);
@@ -9,17 +22,21 @@ function fileSelected(event){
 
     console.log(images);
     updateImage();
-    setInterval(updateImage, 3000);
-    event.target.style.display = "none"
+    setInterval(updateImage, interval_ms);
+    event.target.style.display = "none";
+
+    const back = document.getElementById("back");
+    const img = document.getElementById("image");
+    document.body.addEventListener("click", moveClock);
+    document.body.addEventListener("touchstart", moveClock);
 }
 
-window.addEventListener('DOMContentLoaded', (event) => {
-	console.log('DOM fully loaded and parsed');
-	setInterval(updateTime, 1000);
-    document.getElementById("fileselector").addEventListener("change", fileSelected);
-
-});
-
+function moveClock(event){
+    console.log("move clock");
+    back.style.position = "absolute";
+    back.style.left = `${event.pageX - back.offsetWidth / 2}px`;
+    back.style.top = `${event.pageY - back.offsetHeight / 2}px`;
+}
 
 function updateImage(){
     console.log("update");
@@ -29,6 +46,7 @@ function updateImage(){
     if(counter >= images.length){
         counter = 0;
     }
+    // imageArea.style.opacity = 0.5;
 }
 
 function updateTime() {
@@ -43,3 +61,4 @@ function updateTime() {
     document.getElementById("real-time").innerHTML = text;
     document.getElementById("date").innerHTML = year + "." + month.slice(-2) + "." + day.slice(-2);
  }
+
